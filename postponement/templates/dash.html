@@ -1,0 +1,59 @@
+{% extends "_landing.html" %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock scripts %}
+
+{% block landing %}
+  
+<section class="w-full p-5 items-center dark:bg-gray-900">
+  {% if messages %}
+        {% for m in messages %}
+            <div class="z-20 message {% if m.tags == 'success' %} bg-green-900 {% elif m.tags == 'error' %} bg-red-900 {% endif %} p-1 px-5 text-white mb-2">
+                <p> <small class="font-extrabold "> {{m}} </small> </p>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="w-full p-5 bg-white border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+       <div class="grid grid-cols-4 gap-4">
+        <div class="p-4 h-24 border-l-4 dark:bg-slate-700 dark:text-white dark:border-pink-600 border-slate-800 flex flex-row gap-6">
+          <div class="text-4xl font-extrabold">
+            {{total_postponement}}
+          </div>
+          <div class="">
+            <div class="text-sm font-extrabold">TOTAL <span class="block">POSTPONEMENT</span></div>
+          </div>
+        </div>
+
+        <div class="p-4 h-24 border-l-4 dark:bg-slate-700 dark:text-white dark:border-pink-600 border-slate-800 flex flex-row gap-6">
+          <div class="text-4xl font-extrabold flex flex-row items-center">
+            {{exams_postponement}}  <sup class="text-green-400 text-sm font-normal"> 10 </sup>
+          </div>
+          <div class="">
+            <div class="text-sm font-extrabold">POSTPONEMENT OF <span class="block">EXAMINATION</span> </div>
+          </div>
+        </div>
+
+        <div class="p-4 h-24 border-l-4 dark:bg-slate-700 dark:text-white dark:border-pink-600 border-slate-800 flex flex-row gap-6">
+          <div class="text-4xl font-extrabold">
+            {{studies_postponement}}
+          </div>
+          <div class="">
+            <div class="text-sm font-extrabold">POSTPONEMENT OF <span class="block">STUDIES</span> </div>
+          </div>
+        </div>
+
+        <div class="p-4 h-24 border-l-4 dark:bg-slate-700 dark:text-white dark:border-pink-600 border-slate-800 flex flex-row gap-6">
+          <div class="text-4xl font-extrabold">
+            {{rejected_postponement}}
+          </div>
+          <div class="">
+            <div class="text-sm font-extrabold">REJECTED <span class="block">POSTPONEMENT</span></div>
+          </div>
+        </div>
+       </div>
+    </div>
+  </section>
+
+  
+{% endblock landing %}

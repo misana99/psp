@@ -1,0 +1,41 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MU:&nbsp;POS&nbsp; &amp; &nbsp;POE</title>
+    {% tailwind_css %}
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    {% block scripts %}{% endblock scripts %}
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+</head>
+
+<body class="bg-white dark:bg-gray-900">
+    <div class="">
+        {% block content %}{% endblock content %}
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.message').click(function() {
+                $('.message').hide(300)
+            })
+        })
+    </script>
+</body>
+
+</html>

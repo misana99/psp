@@ -1,0 +1,125 @@
+{% extends "_landing.html" %}
+
+{% block landing %}
+  
+<section class="flex w-full items-center dark:bg-gray-900">
+    <div class="w-full p-2 bg-white border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <div class="w-full px-1 mx-auto">
+            <!-- Start coding here -->
+            <div class="relative overflow-hidden bg-white dark:bg-gray-800 sm:rounded-lg">
+              <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                <div>
+                  <h5 class="mr-3 font-semibold dark:text-white uppercase">Student's Postponement Details</h5>
+                </div>
+                <a href="{% url "pspn:create" %}" type="button" class="flex items-center justify-center px-4 py-2 text-sm font-extrabold text-zinc-950 dark:text-white rounded-sm ring-2 ring-zinc-950 dark:ring-pink-900 outline-none hover:bg-gray-100 dark:hover:bg-gray-700">
+                  Postpone
+                </a>
+              </div>
+            </div>
+        </div>
+
+        <div class="relative overflow-x-auto border-t border-gray-200 dark:border-gray-700 py-2">
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="z-20 message {% if m.tags == 'success' %} bg-green-900 {% elif m.tags == 'error' %} bg-red-900 {% endif %} p-1 px-5 text-white mb-2">
+                        <p> <small class="font-extrabold "> {{m}} </small> </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-100 font-extrabold uppercase bg-zinc-900 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Activity</th>
+                        <th scope="col" class="px-6 py-3">Requested</th>
+                        <th scope="col" class="px-6 py-3">Reason</th>
+                        <th scope="col" class="px-6 py-3">File</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">A/Year</th>
+                        <th scope="col" class="px-6 py-3">Semester</th>
+                        <th scope="col" class="px-6 py-3">Impact on</th>
+                    </tr>
+                </thead>
+                <tbody class="shadow-lg">
+                    {% if postponement %}
+                        {% for postponed in postponement %}
+
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.activity }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.requested }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.reason }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> 
+                                    <button class="PDF-open" data-modal-target="static-modal" data-modal-toggle="static-modal" onclick="PDF_OPEN('{{ MEDIA_URL }}{{ postponed.evidence }}')">View</button>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.status }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.academicYear__academicYearFrom|date:"Y" }}/{{ postponed.academicYear__academicYearTo|date:"Y" }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.scheduleSemester__semester__semesterName }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {% if postponed.activity == 'Examination' %}
+                                            <a href="{% url "pspn:activity" postponed.postponementID %}" role="button" class="py-1.5 px-5 me-2 mb-0 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-sm border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                view
+                                            </a>
+                                    {% else %}
+                                            <a href="{% url "pspn:activity_two" postponed.postponementID %}" role="button" class="py-1.5 px-5 me-2 mb-0 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-sm border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                                view
+                                            </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    {% else %}
+
+                        <tr>
+                            <td colspan="8" class="py-3 text-xs text-center font-semibold">
+                                No any activity
+                            </td>
+                        </tr>
+                    
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+  </section>
+
+
+    <!-- Main modal -->
+<div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    FILE ATTACHED
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="space-y-4">
+                <div class="iframe"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('[data-modal-hide="static-modal"]').click(function () {
+        $('.iframe').empty();
+    });
+
+    function PDF_OPEN(value)
+    {
+        let i = '<embed src="'+ value +'" type="" class="w-full h-[400px]">';
+        $('.iframe').empty().append(i);
+    }
+</script>
+
+  
+{% endblock landing %}

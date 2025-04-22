@@ -1,0 +1,193 @@
+{% extends "_landing.html" %}
+
+{% block landing %}
+  
+<section class="flex w-full items-center dark:bg-gray-900">
+    <div class="w-full p-2 bg-white border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <div class="w-full px-1 mx-auto">
+            <!-- Start coding here -->
+            <div class="relative overflow-hidden bg-white dark:bg-gray-800 sm:rounded-lg">
+              <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                <div>
+                  <h5 class="mr-3 font-semibold dark:text-white uppercase">Postponement Requests</h5>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="relative overflow-x-auto border-t border-gray-200 dark:border-gray-700 py-2">
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="z-20 message {% if m.tags == 'success' %} bg-green-900 {% elif m.tags == 'error' %} bg-red-900 {% endif %} p-1 px-5 text-white mb-2">
+                        <p> <small class="font-extrabold "> {{m}} </small> </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table">
+                <thead class="text-xs text-gray-100 font-extrabold uppercase bg-zinc-900 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Student</th>
+                        <th scope="col" class="px-6 py-3">Activity</th>
+                        <th scope="col" class="px-6 py-3">Requested</th>
+                        <th scope="col" class="px-6 py-3">Reason</th>
+                        <th scope="col" class="px-6 py-3">File</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3">A/Year</th>
+                        {% comment %} <th scope="col" class="px-6 py-3">Semester</th>
+                        <th scope="col" class="px-6 py-3">Impact on</th>
+                        <th scope="col" class="px-6 py-3">Notice</th> {% endcomment %}
+                    </tr>
+                </thead>
+                <tbody class="shadow-lg select-none">
+                    {% if postponement %}
+                        {% for postponed in postponement %}
+
+                            <tr data-id = "{{ postponed.postponementID }}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.student__registrationNumber }} </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.activity }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.requested }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.reason }} </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <button class="PDF-open" data-modal-target="static-modal" data-modal-toggle="static-modal" onclick="PDF_OPEN('{{ MEDIA_URL }}{{ postponed.evidence }}')">View</button>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ postponed.status }}
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"> {{ postponed.academicYear__academicYearFrom|date:"Y" }}/{{ postponed.academicYear__academicYearTo|date:"Y" }} </td>
+                            </tr>
+
+                        {% endfor %}
+                    
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+  </section>
+
+
+    <!-- Main modal -->
+    <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        FILE ATTACHED & CONFIRMATION
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="space-y-4">
+
+
+                    <div id="accordion-collapse" data-accordion="collapse">
+                        <h2 id="accordion-collapse-heading-1">
+                            <button type="button" class="flex items-center justify-between w-full p-5 font-extrabold text-xs rtl:text-right text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
+                                <span>Attachement</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-1" class="hidden" aria-labelledby="accordion-collapse-heading-1">
+                        <div class="iframe"></div>
+                        </div>
+
+
+                        <h2 id="accordion-collapse-heading-2">
+                        <button type="button" class="flex items-center justify-between w-full p-5 font-extrabold text-xs rtl:text-right text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-2" aria-expanded="false" aria-controls="accordion-collapse-body-2">
+                            <span>Confirmation</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                        </button>
+                        </h2>
+                        <div id="accordion-collapse-body-2" class="hidden" aria-labelledby="accordion-collapse-heading-2">
+                        <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
+                            <form method="post">
+
+                                {% csrf_token %}
+            
+            
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="mt-3">
+                                            <label for="verification" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Verification status</label>
+                                            <select name="verification" id="verification" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option value="">Select</option>
+                                                <option value="Accepted">Accept</option>
+                                                <option value="Rejected">Reject</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12" id="rejectComment">
+                                            <div class="mt-3">
+                                                <label for="reason-rejection" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Reason for rejection</label>
+                                                <textarea name="reason-rejection" id="reason-rejection" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <input type="hidden" name="postponement" id="postponement">
+                                
+                                <div class="mt-2 py-3 mx-4" id="formFooter">
+                                    <button id="submitBtn" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+    
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            let reject = $("#rejectComment").hide(); 
+
+            $("tr").click(function(){
+                var dataId = $(this).data("id");
+                $('#postponement').val(dataId)
+            });
+
+            $("#verification").change(function () {
+                if ($(this).val() === "Rejected") {
+                    reject.show(250); 
+                } else {
+                    reject.hide(250);
+                }
+            });
+
+
+            $('.table').dataTable({
+                responsive: true
+            }) 
+            
+        });
+
+        $('[data-modal-hide="static-modal"]').click(function () {
+            $('.iframe').empty();
+        });
+
+        function PDF_OPEN(value)
+        {
+            let i = '<embed src="'+ value +'" type="" class="w-full h-[400px]">';
+            $('.iframe').empty().append(i);
+        }
+    </script>
+
+
+  
+{% endblock landing %}
