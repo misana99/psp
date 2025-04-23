@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ix*=s87s0f(_q7vjm8r-ouf9rjv0(d4sy9m0+9(-u$=%-4a_5s'
+SECRET_KEY = config('DJANGO_APP_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG_MODE', cast=bool)
 
 ALLOWED_HOSTS = ["192.168.30.32", "127.0.0.1", "localhost"]
 
@@ -85,21 +85,19 @@ WSGI_APPLICATION = 'base.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'pspn',  # Replace with your PostgreSQL database name
-#         'USER': 'postgres',       # Replace with your PostgreSQL username
-#         'PASSWORD': '1234',   # Replace with your PostgreSQL password
-#         'HOST': 'localhost',           # Set to 'localhost' if running locally
-#         'PORT': '5432',   
-#     }
-# }
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://192.168.30.32:2223",
+]
 
 
 # Password validation
