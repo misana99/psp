@@ -159,9 +159,9 @@ X_FRAME_OPTIONS = 'ALLOW-FROM http://192.168.30.32:4323'
 SESSION_COOKIE_AGE = 500  # 300 seconds (5 minutes)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
-}
+# STORAGES = {
+#     # ...
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+#     },
+# }
